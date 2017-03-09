@@ -1,0 +1,62 @@
+--- app_old.js	2017-03-09 21:03:12.721962100 +0200
++++ app.js	2017-03-08 13:29:52.000000000 +0200
+@@ -108,30 +108,19 @@
+ var DISABLE_AUTO_FETCH_LOADING_BAR_TIMEOUT = 5000;
+ 
+ function configure(PDFJS) {
+-  ///PDFJS.imageResourcesPath = './images/'; /// patched
++  PDFJS.imageResourcesPath = './images/';
+   if (typeof PDFJSDev !== 'undefined' &&
+       PDFJSDev.test('FIREFOX || MOZCENTRAL || GENERIC || CHROME')) {
+-    ///PDFJS.workerSrc = '../build/pdf.worker.js'; /// patched
++    PDFJS.workerSrc = '../build/pdf.worker.js';
+   }
+   if (typeof PDFJSDev === 'undefined' || !PDFJSDev.test('PRODUCTION')) {
+-    ///PDFJS.cMapUrl = '../external/bcmaps/'; /// patched
++    PDFJS.cMapUrl = '../external/bcmaps/';
+     PDFJS.cMapPacked = true;
+-    ///PDFJS.workerSrc = '../src/worker_loader.js'; /// patched
++    PDFJS.workerSrc = '../src/worker_loader.js';
+   } else {
+-    ///PDFJS.cMapUrl = '../web/cmaps/'; /// patched
++    PDFJS.cMapUrl = '../web/cmaps/';
+     PDFJS.cMapPacked = true;
+   }
+-  // === patch start ===
+-  var scriptTagContainer = document.body ||
+-                           document.getElementsByTagName('head')[0];
+-  var pdfjsSrc = scriptTagContainer.lastChild.src;
+-  
+-  if (pdfjsSrc) {
+-    PDFJS.imageResourcesPath = pdfjsSrc.replace(/pdf\.js$/i, 'images/');
+-    PDFJS.workerSrc = pdfjsSrc.replace(/pdf\.js$/i, 'pdf.worker.js');
+-    PDFJS.cMapUrl = pdfjsSrc.replace(/pdf\.js$/i, 'cmaps/');
+-  } 
+-  // === patch end === 
+ }
+ 
+ var DefaultExernalServices = {
+@@ -1197,12 +1186,7 @@
+ 
+     // We don't want to remove fonts used by active page SVGs.
+     if (this.pdfViewer.renderer !== RendererType.SVG) {
+-       ///this.pdfDocument.cleanup(); /// patched
+-       // === patch start ===
+-        if (this.pdfDocument) {
+-          this.pdfDocument.cleanup();
+-        }   
+-       // === patch start === 
++      this.pdfDocument.cleanup();
+     }
+   },
+ 
+@@ -1358,9 +1342,6 @@
+         if (!files || files.length === 0) {
+           return;
+         }
+-       // === patch start ===
+-       if(evt.target.id == PDFViewerApplication.appConfig.openFileInputName)
+-       // === patch end === 
+         eventBus.dispatch('fileinputchange', {
+           fileInput: evt.target,
+         });

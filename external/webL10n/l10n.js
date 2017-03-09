@@ -827,7 +827,12 @@ document.webL10n = (function(window, document, undefined) {
   function getL10nData(key, args, fallback) {
     var data = gL10nData[key];
     if (!data) {
-      console.warn('#' + key + ' is undefined.');
+      ///console.warn('#' + key + ' is undefined.'); /// patched
+      // === patch start ===
+      if (Object.keys(gL10nData).length > 0) {
+        console.warn('#' + key + ' is undefined.');
+      }
+      // === patch end === 
       if (!fallback) {
         return null;
       }

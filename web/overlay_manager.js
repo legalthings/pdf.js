@@ -49,7 +49,14 @@ var OverlayManager = {
       if (!name || !element || !(container = element.parentNode)) {
         throw new Error('Not enough parameters.');
       } else if (this.overlays[name]) {
-        throw new Error('The overlay is already registered.');
+        ///throw new Error('The overlay is already registered.'); /// patched
+        // === patch start ===
+        if (this.active !== name) {
+            this.unregister(name);
+          } else {
+            throw new Error('The overlay is already registered and active.');
+          }    
+        // === patch start === 
       }
       this.overlays[name] = { element: element,
                               container: container,
