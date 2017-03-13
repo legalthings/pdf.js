@@ -108,19 +108,30 @@ var DEFAULT_SCALE_DELTA = 1.1;
 var DISABLE_AUTO_FETCH_LOADING_BAR_TIMEOUT = 5000;
 
 function configure(PDFJS) {
-  PDFJS.imageResourcesPath = './images/';
+  ///PDFJS.imageResourcesPath = './images/'; /// patched
   if (typeof PDFJSDev !== 'undefined' &&
       PDFJSDev.test('FIREFOX || MOZCENTRAL || GENERIC || CHROME')) {
-    PDFJS.workerSrc = '../build/pdf.worker.js';
+    ///PDFJS.workerSrc = '../build/pdf.worker.js'; /// patched
   }
   if (typeof PDFJSDev === 'undefined' || !PDFJSDev.test('PRODUCTION')) {
-    PDFJS.cMapUrl = '../external/bcmaps/';
+    ///PDFJS.cMapUrl = '../external/bcmaps/'; /// patched
     PDFJS.cMapPacked = true;
-    PDFJS.workerSrc = '../src/worker_loader.js';
+    ///PDFJS.workerSrc = '../src/worker_loader.js'; /// patched
   } else {
-    PDFJS.cMapUrl = '../web/cmaps/';
+    ///PDFJS.cMapUrl = '../web/cmaps/'; /// patched
     PDFJS.cMapPacked = true;
   }
+  // === patch start ===
+  var scriptTagContainer = document.body ||
+                           document.getElementsByTagName('head')[0];
+  var pdfjsSrc = scriptTagContainer.lastChild.src;
+  
+  if (pdfjsSrc) {
+    PDFJS.imageResourcesPath = pdfjsSrc.replace(/pdf\.js$/i, 'images/');
+    PDFJS.workerSrc = pdfjsSrc.replace(/pdf\.js$/i, 'pdf.worker.js');
+    PDFJS.cMapUrl = pdfjsSrc.replace(/pdf\.js$/i, 'cmaps/');
+  } 
+  // === patch end === 
 }
 
 var DefaultExernalServices = {
@@ -1186,7 +1197,12 @@ var PDFViewerApplication = {
 
     // We don't want to remove fonts used by active page SVGs.
     if (this.pdfViewer.renderer !== RendererType.SVG) {
-      this.pdfDocument.cleanup();
+       ///this.pdfDocument.cleanup(); /// patched
+       // === patch start ===
+        if (this.pdfDocument) {
+          this.pdfDocument.cleanup();
+        }   
+       // === patch start === 
     }
   },
 
@@ -1342,6 +1358,9 @@ var PDFViewerApplication = {
         if (!files || files.length === 0) {
           return;
         }
+       // === patch start ===
+       if(evt.target.id == PDFViewerApplication.appConfig.openFileInputName)
+       // === patch end === 
         eventBus.dispatch('fileinputchange', {
           fileInput: evt.target,
         });
