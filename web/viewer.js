@@ -191,8 +191,7 @@ if (document.readyState === 'interactive' ||
   ///document.addEventListener('DOMContentLoaded', webViewerLoad, true); /// patched
   // === patch start ===
   PDFJS.webViewerLoad = function (src) {
-    if (src) DEFAULT_URL = src;
- 
+    DEFAULT_URL = src;
     webViewerLoad();
   }  
   // === patch end === 
