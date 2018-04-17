@@ -631,11 +631,6 @@ var WidgetAnnotation = (function WidgetAnnotationClosure() {
     }
 
     data.readOnly = this.hasFieldFlag(AnnotationFieldFlag.READONLY);
-
-    // Hide signatures because we cannot validate them.
-    // if (data.fieldType === 'Sig') {
-    //   this.setFlags(AnnotationFlag.HIDDEN);
-    // }
   }
 
   Util.inherit(WidgetAnnotation, Annotation, {
