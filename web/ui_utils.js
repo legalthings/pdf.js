@@ -372,7 +372,7 @@ function noContextMenuHandler(e) {
  * @return {String} Guessed PDF file name.
  */
 function getPDFFileNameFromURL(url, defaultFilename) {
-  if (typeof defaultFilename === 'undefined') {
+  if (typeof defaultFilename === 'undefined' || defaultFilename == "") {
     defaultFilename = 'document.pdf';
   }
   var reURI = /^(?:(?:[^:]+:)?\/\/[^\/]+)?([^?#]*)(\?[^#]*)?(#.*)?$/;
